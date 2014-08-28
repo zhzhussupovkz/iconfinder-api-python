@@ -26,5 +26,6 @@
 from iconfinder_api import IconfinderAPI
 
 my_api_key = 'Your API key'
+query = 'Your query'
 api = IconfinderAPI(my_api_key)
-api.download(q = 'coin')
+api.download(q = query)
