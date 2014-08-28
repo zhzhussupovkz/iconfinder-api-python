@@ -34,6 +34,7 @@ class IconfinderAPI:
 		self.api_key = api_key
 		self.api_url = 'https://www.iconfinder.com/json/'
 
+	# send request
 	def send_request(self, api_method, query_args):
 		required_args = {'api_key' : self.api_key }
 		query_args.update(required_args)
@@ -49,6 +50,7 @@ class IconfinderAPI:
 			resp.close()
 			return False
 
+	# search icons
 	def search(self, q = 'icon', p = 0, c = 10, min = 1, max = 48):
 		query_args = {'q' : q, 'p' : p, 'c' : c, 'min' : min, 'max' : max }
 		params = {'l' : 0, 'price' : 'any' }
@@ -57,8 +59,25 @@ class IconfinderAPI:
 		if json:
 			return json.get('searchresults').get('icons')
 
+	# get icon details
 	def icondetails(self, id = 1, size = 128):
 		query_args = {'id' : id, 'size' : size }
 		json = self.send_request('icondetails', query_args)
 		if json:
 			return json.get('icon')
+
+	# download icons by search query
+	def download(self, q = 'icon', p = 0, c = 10, min = 1, max = 48):
+		icons = self.search(q, p, c, min, max)
+		print "Found %s icons for search query: %s" % (len(icons), q)
+		try:
+			for icon in icons:
+				link = icon.get('image')
+				resp = urllib2.urlopen(link)
+				filename = link.split('/')[-1]
+				f = open(filename, "wb")
+				f.write(resp.read())
+				f.close()
+				print "Icon %s: OK" % filename
+		except:
+			print "Error when downloading icons"
