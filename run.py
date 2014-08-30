@@ -23,9 +23,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from optparse import OptionParser
 from iconfinder_api import IconfinderAPI
 
 my_api_key = 'Your API key'
-query = 'Your query'
+
+usage = "%prog [options]\n\n"
+usage += "Command-line tool for downloading icons from https://www.iconfinder.com\n"
+usage += "Copyright (c) 2014 Zhussupov Zhassulan zhzhussupovkz@gmail.com\n"
+usage += "While using this program, get API key from https://www.iconfinder.com"
+option_parser = OptionParser(usage=usage, version="%prog 1.0")
+option_parser.add_option("-q", "--query", help = "search for icons by search term", default = "python")
+option_parser.add_option("-d", "--dir", help = "folder, which will be downloaded icons", default = "icons")
+option_parser.add_option("-p", "--page", help = "specify result page(index). starts from 0", default = 0)
+option_parser.add_option("-c", "--count", help = "number of icons per page", default = 10)
+option_parser.add_option("-i", "--min", help = "specify minimum size of icons", default = 1)
+option_parser.add_option("-x", "--max", help = "specify maximum size of icons", default = 48)
+(options, args) = option_parser.parse_args()
+
 api = IconfinderAPI(my_api_key)
-api.download(q = query)
+api.download(dir = options.dir, q = options.query, p = options.page, c = options.count, min = options.min, max = options.max)

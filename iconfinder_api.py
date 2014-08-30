@@ -67,14 +67,16 @@ class IconfinderAPI:
 			return json.get('icon')
 
 	# download icons by search query
-	def download(self, q = 'icon', p = 0, c = 10, min = 1, max = 48):
+	def download(self, dir = 'python', q = 'icon', p = 0, c = 10, min = 1, max = 48):
 		icons = self.search(q, p, c, min, max)
 		print "Found %s icons for search query: %s" % (len(icons), q)
 		try:
 			for icon in icons:
 				link = icon.get('image')
 				resp = urllib2.urlopen(link)
-				filename = link.split('/')[-1]
+				filename = './'+ dir + '/' + link.split('/')[-1]
+				if not os.path.exists(os.path.dirname(filename)):
+					os.makedirs(os.path.dirname(filename))
 				f = open(filename, "wb")
 				f.write(resp.read())
 				f.close()
